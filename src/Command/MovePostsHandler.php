@@ -24,6 +24,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use SychO\MovePosts\Event\PostsMoved;
 use SychO\MovePosts\Exception\MoveOldPostToNewerDiscussionException;
+use SychO\MovePosts\Exception\MovePostsFromDifferentDiscussionsException;
 use SychO\MovePosts\MovedDiscussionFirstPostFactory;
 use SychO\MovePosts\MovePostsValidator;
 use SychO\MovePosts\PostMovedPost;
@@ -116,10 +117,6 @@ class MovePostsHandler
         $data = $command->data;
         $emulate = $command->emulate;
 
-        /**
-         * @TODO notifications
-         */
-
         $actor->assertCan('movePosts');
 
         $this->validator->assertValid($data);
@@ -127,11 +124,17 @@ class MovePostsHandler
         $newDiscussion = Arr::get($data, 'newDiscussion', false);
 
         $sourceDiscussion = $this->discussions->findOrFail(Arr::get($data, 'sourceDiscussionId'));
+
+        /** @var EloquentCollection $posts */
         $posts = CommentPost::query()
             ->whereVisibleTo($actor)
             ->whereIn('id', Arr::get($data, 'postIds'))
             ->orderBy('created_at')
             ->get();
+
+        if ($posts->where('discussion_id', '!=', $sourceDiscussion->id)->first()) {
+            throw new MovePostsFromDifferentDiscussionsException();
+        }
 
         $targetDiscussion = $newDiscussion
             ? $this->createTargetDiscussion($sourceDiscussion, $posts->first(), Arr::get($data, 'newDiscussionTitle'))
@@ -188,6 +191,12 @@ class MovePostsHandler
         if (isset($sourceDiscussion->is_locked) && $movingFirstPostOnly) {
             $sourceDiscussion->is_locked = true;
         }
+
+        $sourceDiscussion->refreshCommentCount();
+        $sourceDiscussion->refreshParticipantCount();
+        $sourceDiscussion->refreshLastPost();
+
+        $sourceDiscussion->post_number_index = $sourceDiscussion->last_post_number;
 
         $sourceDiscussion->save();
 

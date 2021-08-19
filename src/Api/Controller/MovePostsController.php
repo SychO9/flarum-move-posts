@@ -41,6 +41,6 @@ class MovePostsController implements RequestHandlerInterface
             new MovePosts($actor, $data, false)
         );
 
-        return new EmptyResponse;
+        return new EmptyResponse(200);
     }
 }

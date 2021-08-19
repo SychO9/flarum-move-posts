@@ -44,7 +44,8 @@ return [
         ->globalPolicy(Access\GlobalPolicy::class),
 
     (new Extend\ErrorHandling())
-        ->status('move_old_post_to_newer_discussion', 409),
+        ->status('move_old_post_to_newer_discussion', 409)
+        ->status('move_posts_from_different_discussions', 409),
 
     (new Extend\Post)
         ->type(PostMovedPost::class),

@@ -45,6 +45,12 @@ php flarum migrate
 php flarum cache:clear
 ```
 
+## Support
+This extension is under minimal maintenance.
+
+It was developed for a client and released as open-source for the benefit of the community.
+I might publish simple bugfixes or compatibility updates for free.
+
 ## Links
 
 - [Packagist](https://packagist.org/packages/sycho/flarum-move-posts)

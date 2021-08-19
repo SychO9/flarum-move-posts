@@ -16,6 +16,7 @@ use Flarum\Discussion\Discussion;
 use Flarum\Post\Post;
 use Flarum\Post\AbstractEventPost;
 use Flarum\Post\MergeableInterface;
+use Flarum\Settings\SettingsRepositoryInterface;
 
 class PostMovedPost extends AbstractEventPost implements MergeableInterface
 {
@@ -23,6 +24,25 @@ class PostMovedPost extends AbstractEventPost implements MergeableInterface
 
     public function saveAfter(Post $previous = null)
     {
+        $groupSequentialPosts = resolve(SettingsRepositoryInterface::class)->get('sycho-move-posts.group_sequential_event_posts');
+
+        // If the previous post is another 'post moved' post, and it's
+        // by the same user, and sequential posts is on, then we can merge this post into it.
+        if ($groupSequentialPosts && $previous instanceof static && $this->user_id === $previous->user_id) {
+            $previous->content = static::buildContent(
+                $previous->content['targetDiscussionId'],
+                $previous->content['targetDiscussionTitle'],
+                $previous->content['count'] + $this->content['count'],
+                $previous->content['number'],
+                $previous->content['originalPostId']
+            );
+            $previous->save();
+
+            return $previous;
+        }
+
+        $this->save();
+
         return $this;
     }
 
@@ -30,7 +50,7 @@ class PostMovedPost extends AbstractEventPost implements MergeableInterface
     {
         $post = new static;
 
-        $post->content = static::buildContent($targetDiscussion->id, $targetDiscussion->title, $count, $movedPost);
+        $post->content = static::buildContent($targetDiscussion->id, $targetDiscussion->title, $count, $movedPost->number, $movedPost->id);
         $post->created_at = $movedPost->created_at;
         $post->discussion_id = $discussionId;
         $post->user_id = $userId;
@@ -40,11 +60,8 @@ class PostMovedPost extends AbstractEventPost implements MergeableInterface
         return $post;
     }
 
-    protected static function buildContent(int $targetDiscussionId, string $targetDiscussionTitle, int $count, Post $post)
+    protected static function buildContent(int $targetDiscussionId, string $targetDiscussionTitle, int $count, int $number, int $originalPostId)
     {
-        $number = $post->number;
-        $originalPostId = $post->id;
-
         return compact('targetDiscussionId', 'targetDiscussionTitle', 'count', 'number', 'originalPostId');
     }
 }

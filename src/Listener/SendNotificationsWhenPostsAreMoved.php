@@ -32,7 +32,7 @@ class SendNotificationsWhenPostsAreMoved
             });
 
         $this->notifications->sync(
-            new PostMovedBlueprint($posts->first()->discussion, $event->sourceDiscussion),
+            new PostMovedBlueprint($event->targetDiscussion, $event->sourceDiscussion),
             $posts->pluck('user')->all()
         );
     }

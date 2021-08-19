@@ -192,7 +192,7 @@ class MovePostsHandler
         $sourceDiscussion->save();
 
         $this->events->dispatch(
-            new PostsMoved($posts, $sourceDiscussion, $actor)
+            new PostsMoved($posts, $targetDiscussion, $sourceDiscussion, $actor)
         );
     }
 
@@ -365,7 +365,7 @@ class MovePostsHandler
 
                     $grouped[$index]->push($post);
                     $grouped[$index]->push($nextPost);
-                    $grouped[$index] = $grouped[$index]->unique();
+                    $grouped[$index] = $grouped[$index]->unique('id');
                 } else {
                     $index++;
                 }

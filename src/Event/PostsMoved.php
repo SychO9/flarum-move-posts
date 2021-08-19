@@ -17,6 +17,11 @@ class PostsMoved
     /**
      * @var Discussion
      */
+    public $targetDiscussion;
+
+    /**
+     * @var Discussion
+     */
     public $sourceDiscussion;
 
     /**
@@ -24,9 +29,10 @@ class PostsMoved
      */
     public $actor;
 
-    public function __construct(Collection $posts, Discussion $sourceDiscussion, User $actor)
+    public function __construct(Collection $posts, Discussion $targetDiscussion, Discussion $sourceDiscussion, User $actor)
     {
         $this->posts = $posts;
+        $this->targetDiscussion = $targetDiscussion;
         $this->sourceDiscussion = $sourceDiscussion;
         $this->actor = $actor;
     }

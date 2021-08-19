@@ -20,15 +20,13 @@ app.initializers.add('sycho/flarum-move-posts', () => {
   // @ts-ignore
   Discussion.prototype.isFirstMoved = Model.attribute('isFirstMoved');
 
-  extend(Discussion.prototype, 'badges', function(badges: ItemList) {
+  extend(Discussion.prototype, 'badges', function (badges: ItemList) {
     if (this.isFirstMoved()) {
-      badges.add('firstMoved', (
-        <Badge
-          type="firstPostMoved"
-          label={app.translator.trans('sycho-move-posts.forum.badge.first_moved_tooltip')}
-          icon="fas fa-exchange-alt"
-        />
-      ), -20);
+      badges.add(
+        'firstMoved',
+        <Badge type="firstPostMoved" label={app.translator.trans('sycho-move-posts.forum.badge.first_moved_tooltip')} icon="fas fa-exchange-alt" />,
+        -20
+      );
     }
   });
 
@@ -38,16 +36,14 @@ app.initializers.add('sycho/flarum-move-posts', () => {
   // @ts-ignore
   app.notificationComponents.postMoved = PostMovedNotification;
 
-  if (! app.data.resources[0].attributes.canMovePosts) {
+  if (!app.data.resources[0].attributes.canMovePosts) {
     return;
   }
 
   const state = new DiscussionPageState();
 
   extend(CommentPost.prototype, 'oninit', function () {
-    this.subtree.check(
-      () => state.selectedPostsToMove()
-    );
+    this.subtree.check(() => state.selectedPostsToMove());
   });
 
   extend(Post.prototype, 'classes', function (classes: string[]) {
@@ -58,7 +54,12 @@ app.initializers.add('sycho/flarum-move-posts', () => {
 
   extend(CommentPost.prototype, 'headerItems', function (items) {
     if (state.has(this.attrs.post.id())) {
-      items.add('moving', <span className="PostMoving">{icon('fas fa-exchange-alt')} {app.translator.trans('sycho-move-posts.forum.post.moving')}</span>);
+      items.add(
+        'moving',
+        <span className="PostMoving">
+          {icon('fas fa-exchange-alt')} {app.translator.trans('sycho-move-posts.forum.post.moving')}
+        </span>
+      );
     }
   });
 
@@ -73,10 +74,13 @@ app.initializers.add('sycho/flarum-move-posts', () => {
         <Button
           icon="fas fa-exchange-alt"
           className="Button"
-          onclick={() => app.modal.show(MovePostsModal, {
-            postIds: state.selectedPostsToMove(),
-            discussion: this.discussion,
-          })}>
+          onclick={() =>
+            app.modal.show(MovePostsModal, {
+              postIds: state.selectedPostsToMove(),
+              discussion: this.discussion,
+            })
+          }
+        >
           {app.translator.trans('sycho-move-posts.forum.discussion.move_posts')}
           <span className="MovePosts-Button-count">{state.selectedPostsToMove().length}</span>
         </Button>
@@ -101,7 +105,8 @@ app.initializers.add('sycho/flarum-move-posts', () => {
           }
 
           m.redraw();
-        }}>
+        }}
+      >
         {app.translator.trans(`sycho-move-posts.forum.post.${operation}`)}
       </Button>
     );

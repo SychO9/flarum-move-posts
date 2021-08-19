@@ -3,10 +3,10 @@ import Modal from 'flarum/common/components/Modal';
 import Switch from 'flarum/common/components/Switch';
 
 export default class MovePostsModal extends Modal {
-  isLoading: string|boolean = false;
+  isLoading: string | boolean = false;
   newDiscussion: boolean = false;
   newDiscussionTitle: string = '';
-  targetDiscussionId: number|null = null;
+  targetDiscussionId: number | null = null;
 
   className() {
     return 'Modal--small MovePostsModal';
@@ -25,9 +25,7 @@ export default class MovePostsModal extends Modal {
             <input className="FormControl" readonly value={this.attrs.postIds.join(', ')} />
           </div>
           <div className="Form-group">
-            <Switch
-              state={this.newDiscussion}
-              onchange={() => this.newDiscussion = !this.newDiscussion}>
+            <Switch state={this.newDiscussion} onchange={() => (this.newDiscussion = !this.newDiscussion)}>
               {app.translator.trans('sycho-move-posts.forum.modal.new_discussion')}
             </Switch>
           </div>
@@ -35,11 +33,7 @@ export default class MovePostsModal extends Modal {
             <div className="Form-group">
               <label for="discussion_name">{app.translator.trans('sycho-move-posts.forum.modal.discussion_name')}</label>
               <p className="helptext">{app.translator.trans('sycho-move-posts.forum.modal.discussion_help')}</p>
-              <input
-                id="discussion_name"
-                className="FormControl"
-                required={true}
-                oninput={(e: any) => this.newDiscussionTitle = e.target.value} />
+              <input id="discussion_name" className="FormControl" required={true} oninput={(e: any) => (this.newDiscussionTitle = e.target.value)} />
             </div>
           ) : (
             <div className="Form-group">
@@ -49,22 +43,15 @@ export default class MovePostsModal extends Modal {
                 className="FormControl"
                 type="number"
                 required={true}
-                onchange={(e: any) => this.targetDiscussionId = e.target!.value} />
+                onchange={(e: any) => (this.targetDiscussionId = e.target!.value)}
+              />
             </div>
           )}
           <div className="Form-group Form-controls">
-            <Button
-              className="Button Button--primary"
-              type="submit"
-              loading={this.isLoading === 'submit'}
-              disabled={this.isLoading === 'check'}>
+            <Button className="Button Button--primary" type="submit" loading={this.isLoading === 'submit'} disabled={this.isLoading === 'check'}>
               {app.translator.trans('sycho-move-posts.forum.modal.submit')}
             </Button>
-            <Button
-              className="Button"
-              onclick={this.emulate.bind(this)}
-              loading={this.isLoading === 'check'}
-              disabled={this.isLoading === 'submit'}>
+            <Button className="Button" onclick={this.emulate.bind(this)} loading={this.isLoading === 'check'} disabled={this.isLoading === 'submit'}>
               {app.translator.trans('sycho-move-posts.forum.modal.check')}
             </Button>
           </div>
@@ -120,34 +107,36 @@ export default class MovePostsModal extends Modal {
 
     if (emulate) url += '/check';
 
-    return app.request({
-      method: 'POST',
-      url: `${app.forum.attribute('baseUrl')}${url}`,
-      body: { data: this.data() },
-      errorHandler: (e: any) => {
-        const error = e.response.errors[0];
-        this.isLoading = false;
+    return app
+      .request({
+        method: 'POST',
+        url: `${app.forum.attribute('baseUrl')}${url}`,
+        body: { data: this.data() },
+        errorHandler: (e: any) => {
+          const error = e.response.errors[0];
+          this.isLoading = false;
 
-        if (error.code !== 'move_old_post_to_newer_discussion') {
-          throw e;
+          if (error.code !== 'move_old_post_to_newer_discussion') {
+            throw e;
+          }
+
+          this.alertAttrs = {
+            type: 'error',
+            content: app.translator.trans('sycho-move-posts.forum.error.move_old_post_to_newer_discussion'),
+          };
+
+          m.redraw();
+        },
+      })
+      .then((response: any) => {
+        this.isLoading = false;
+        if (!emulate) {
+          m.redraw();
+          window.location.reload();
+          app.modal.close();
         }
 
-        this.alertAttrs = {
-          type: 'error',
-          content: app.translator.trans('sycho-move-posts.forum.error.move_old_post_to_newer_discussion'),
-        };
-
-        m.redraw();
-      },
-    }).then((response: any) => {
-      this.isLoading = false;
-      if (!emulate) {
-        m.redraw();
-        window.location.reload();
-        app.modal.close();
-      }
-
-      return response;
-    });
+        return response;
+      });
   }
 }

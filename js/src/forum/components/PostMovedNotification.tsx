@@ -12,7 +12,9 @@ export default class PostMovedNotification extends Notification {
 
   content() {
     return app.translator.trans('sycho-move-posts.forum.notifications.post_moved_text', {
-      targetDiscussionTitle: <span className="MovePosts-Notification-targetDiscussion">{this.attrs.notification.content().targetDiscussionTitle}</span>
+      targetDiscussionTitle: (
+        <span className="MovePosts-Notification-targetDiscussion">{this.attrs.notification.content().targetDiscussionTitle}</span>
+      ),
     });
   }
 }

@@ -13,9 +13,7 @@ export default class DiscussionPageState {
   }
 
   remove(postId: number): void {
-    this.selectedPostsToMove(
-      this.selectedPostsToMove().filter((id: number) => id !== postId)
-    );
+    this.selectedPostsToMove(this.selectedPostsToMove().filter((id: number) => id !== postId));
   }
 
   has(postId: number): boolean {

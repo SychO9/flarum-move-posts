@@ -7,6 +7,9 @@ sycho-move-posts:
         You can edit the contents of that post here.
       group_sequential_posts: Group sequential post moved event posts into one.
 
+    permissions:
+      move_posts: => sycho-move-posts.ref.move_posts
+
   forum:
     badge:
       first_moved_tooltip: Moved

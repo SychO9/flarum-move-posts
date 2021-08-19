@@ -27,5 +27,10 @@ app.initializers.add('sycho/flarum-move-posts', () => {
       setting: 'sycho-move-posts.group_sequential_event_posts',
       label: app.translator.trans('sycho-move-posts.admin.settings.group_sequential_posts'),
       type: 'boolean',
-    });
+    })
+    .registerPermission({
+      icon: 'fas fa-exchange-alt',
+      label: app.translator.trans('sycho-move-posts.admin.permissions.move_posts'),
+      permission: 'sycho-move-posts:movePosts'
+    }, 'moderate');
 });

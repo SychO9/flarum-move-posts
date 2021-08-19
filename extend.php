@@ -13,6 +13,7 @@ namespace SychO\MovePosts;
 
 use Flarum\Api\Serializer\BasicDiscussionSerializer;
 use Flarum\Api\Serializer\DiscussionSerializer;
+use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Extend;
 
@@ -30,6 +31,11 @@ return [
     (new Extend\ApiSerializer(DiscussionSerializer::class))
         ->attribute('isFirstMoved', function (DiscussionSerializer $serializer, Discussion $discussion) {
             return (bool) $discussion->is_first_moved;
+        }),
+
+    (new Extend\ApiSerializer(ForumSerializer::class))
+        ->attribute('canMovePosts', function (ForumSerializer $serializer) {
+            return $serializer->getActor()->can('movePosts');
         }),
 
     (new Extend\Formatter)

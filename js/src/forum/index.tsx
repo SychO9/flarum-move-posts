@@ -38,6 +38,10 @@ app.initializers.add('sycho/flarum-move-posts', () => {
   // @ts-ignore
   app.notificationComponents.postMoved = PostMovedNotification;
 
+  if (! app.data.resources[0].attributes.canMovePosts) {
+    return;
+  }
+
   const state = new DiscussionPageState();
 
   extend(CommentPost.prototype, 'oninit', function () {

@@ -196,7 +196,7 @@ class MovePostsHandler
         $sourceDiscussion->refreshParticipantCount();
         $sourceDiscussion->refreshLastPost();
 
-        $sourceDiscussion->post_number_index = $sourceDiscussion->last_post_number;
+        $sourceDiscussion->post_number_index = Post::query()->where('discussion_id', $sourceDiscussion->id)->max('number');
 
         $sourceDiscussion->save();
 

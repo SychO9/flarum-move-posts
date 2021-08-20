@@ -13,6 +13,7 @@ namespace SychO\MovePosts\Command;
 
 use Flarum\Discussion\Discussion;
 use Flarum\Discussion\DiscussionRepository;
+use Flarum\Lock\Event\DiscussionWasLocked;
 use Flarum\Post\CommentPost;
 use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -188,15 +189,19 @@ class MovePostsHandler
             $sourceDiscussion->is_first_moved = true;
         }
 
-        if (isset($sourceDiscussion->is_locked) && $movingFirstPostOnly) {
-            $sourceDiscussion->is_locked = true;
-        }
-
         $sourceDiscussion->refreshCommentCount();
         $sourceDiscussion->refreshParticipantCount();
         $sourceDiscussion->refreshLastPost();
 
         $sourceDiscussion->post_number_index = Post::query()->where('discussion_id', $sourceDiscussion->id)->max('number');
+
+        if (isset($sourceDiscussion->is_locked) && $movingFirstPostOnly) {
+            $sourceDiscussion->is_locked = true;
+
+            $this->events->dispatch(
+                new DiscussionWasLocked($sourceDiscussion, $actor)
+            );
+        }
 
         $sourceDiscussion->save();
 

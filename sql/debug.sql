@@ -31,7 +31,7 @@ SET number = number + (
         FROM fl_posts
         WHERE id IN (491, 692, 1093, 1394, 1395, 1396)
     ) as t
-  	WHERE fl_posts.created_at > t.created_at
+  	WHERE fl_posts.created_at >= t.created_at
 )
 WHERE discussion_id = 4;
 

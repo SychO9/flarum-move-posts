@@ -300,7 +300,7 @@ class MovePostsHandler
             ->mergeBindings($selectCreatedAt)
             ->selectRaw('COUNT(created_at) as count')
             ->from($db->raw("({$selectCreatedAt->toSql()}) as sp"))
-            ->whereColumn('posts.created_at', '>', $db->raw('sp.created_at'));
+            ->whereColumn('posts.created_at', '>=', $db->raw('sp.created_at'));
 
         $db->table('posts')
             ->mergeBindings($selectCount)

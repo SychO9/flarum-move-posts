@@ -6,6 +6,17 @@
     ],
     "type": "flarum-extension",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://www.buymeacoffee.com/sycho"
+        }
+    ],
+    "homepage": "https://sycho9.github.io",
+    "support": {
+        "issues": "https://github.com/SychO9/flarum-move-posts/issues",
+        "source": "https://github.com/SychO9/flarum-move-posts"
+    },
     "require": {
         "flarum/core": "^1.0.0"
     },

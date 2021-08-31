@@ -22,7 +22,7 @@ sycho-move-posts:
 
     modal:
       check: Check Operation Type
-      destination: Destination Discussion ID
+      destination: Destination Discussion
       discussion_help: The tags of the source discussion will be used, and can be changed after creation.
       discussion_name: => core.forum.composer_discussion.title_placeholder
       new_discussion: New Discussion

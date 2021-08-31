@@ -1,2 +1,162 @@
-module.exports=function(t){var e={};function o(s){if(e[s])return e[s].exports;var n=e[s]={i:s,l:!1,exports:{}};return t[s].call(n.exports,n,n.exports,o),n.l=!0,n.exports}return o.m=t,o.c=e,o.d=function(t,e,s){o.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:s})},o.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},o.t=function(t,e){if(1&e&&(t=o(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var s=Object.create(null);if(o.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var n in t)o.d(s,n,function(e){return t[e]}.bind(null,n));return s},o.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return o.d(e,"a",e),e},o.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},o.p="",o(o.s=19)}({17:function(t,e){t.exports=flarum.core.compat["common/utils/extractText"]},19:function(t,e,o){"use strict";o.r(e);var s=o(17),n=o.n(s);app.initializers.add("sycho/flarum-move-posts",(function(){var t=app.data.settings["sycho-move-posts.moved_first_post_content"]||n()(app.translator.trans("sycho-move-posts.lib.discussion.first_post.default_content"));app.extensionData.for("sycho-move-posts").registerSetting((function(){var e=this;return m("div",{className:"Form-group"},m("label",{for:"moved_first_post_content"},app.translator.trans("sycho-move-posts.admin.settings.moved_first_post_content")),m("div",{className:"helpText"},app.translator.trans("sycho-move-posts.admin.settings.moved_first_post_content_help")),m("textarea",{id:"moved_first_post_content",oninput:function(o){t=o.target.value,e.setting("sycho-move-posts.moved_first_post_content")(o.target.value)},className:"FormControl",required:!0},t))})).registerSetting({setting:"sycho-move-posts.group_sequential_event_posts",label:app.translator.trans("sycho-move-posts.admin.settings.group_sequential_posts"),type:"boolean"}).registerPermission({icon:"fas fa-exchange-alt",label:app.translator.trans("sycho-move-posts.admin.permissions.move_posts"),permission:"sycho-move-posts:movePosts"},"moderate")}))}});
+module.exports =
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./admin.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./admin.js":
+/*!******************!*\
+  !*** ./admin.js ***!
+  \******************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _src_admin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/admin */ "./src/admin/index.tsx");
+/* empty/unused harmony star reexport */
+
+/***/ }),
+
+/***/ "./src/admin/index.tsx":
+/*!*****************************!*\
+  !*** ./src/admin/index.tsx ***!
+  \*****************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! flarum/common/utils/extractText */ "flarum/common/utils/extractText");
+/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_0__);
+
+app.initializers.add('sycho/flarum-move-posts', function () {
+  var value = app.data.settings['sycho-move-posts.moved_first_post_content'] || flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_0___default()(app.translator.trans('sycho-move-posts.lib.discussion.first_post.default_content'));
+  app.extensionData["for"]('sycho-move-posts').registerSetting(function () {
+    var _this = this;
+
+    return m("div", {
+      className: "Form-group"
+    }, m("label", {
+      "for": "moved_first_post_content"
+    }, app.translator.trans('sycho-move-posts.admin.settings.moved_first_post_content')), m("div", {
+      className: "helpText"
+    }, app.translator.trans('sycho-move-posts.admin.settings.moved_first_post_content_help')), m("textarea", {
+      id: "moved_first_post_content",
+      oninput: function oninput(e) {
+        value = e.target.value;
+
+        _this.setting('sycho-move-posts.moved_first_post_content')(e.target.value);
+      },
+      className: "FormControl",
+      required: true
+    }, value));
+  }).registerSetting({
+    setting: 'sycho-move-posts.group_sequential_event_posts',
+    label: app.translator.trans('sycho-move-posts.admin.settings.group_sequential_posts'),
+    type: 'boolean'
+  }).registerPermission({
+    icon: 'fas fa-exchange-alt',
+    label: app.translator.trans('sycho-move-posts.admin.permissions.move_posts'),
+    permission: 'sycho-move-posts:movePosts'
+  }, 'moderate');
+});
+
+/***/ }),
+
+/***/ "flarum/common/utils/extractText":
+/*!*****************************************************************!*\
+  !*** external "flarum.core.compat['common/utils/extractText']" ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = flarum.core.compat['common/utils/extractText'];
+
+/***/ })
+
+/******/ });
 //# sourceMappingURL=admin.js.map

@@ -1,12 +1,22 @@
 import Button from 'flarum/common/components/Button';
 import Modal from 'flarum/common/components/Modal';
 import Switch from 'flarum/common/components/Switch';
+import DiscussionSearch from 'flarum/uikit/forum/DiscussionSearch';
+import {ComponentAttrs} from "flarum/common/Component";
+import type Discussion from "flarum/common/models/Discussion";
+import GlobalSearchState from "flarum/forum/states/GlobalSearchState";
 
-export default class MovePostsModal extends Modal {
+export interface MovePostsModalAttrs extends ComponentAttrs {
+  discussion: Discussion;
+  postIds: number[];
+}
+
+export default class MovePostsModal<T extends MovePostsModalAttrs> extends Modal<T> {
   isLoading: string | boolean = false;
   newDiscussion: boolean = false;
   newDiscussionTitle: string = '';
   targetDiscussionId: number | null = null;
+  search = new GlobalSearchState();
 
   className() {
     return 'Modal--small MovePostsModal';
@@ -38,20 +48,32 @@ export default class MovePostsModal extends Modal {
           ) : (
             <div className="Form-group">
               <label for="destination">{app.translator.trans('sycho-move-posts.forum.modal.destination')}</label>
-              <input
+              {/*<input
                 id="destination"
                 className="FormControl"
                 type="number"
                 required={true}
                 onchange={(e: any) => (this.targetDiscussionId = e.target!.value)}
-              />
+              />*/}
+              <DiscussionSearch
+                state={this.search}
+                ignore={this.attrs.discussion.id()}
+                onSelect={(discussion: Discussion) => this.targetDiscussionId = discussion.id()} />
             </div>
           )}
           <div className="Form-group Form-controls">
-            <Button className="Button Button--primary" type="submit" loading={this.isLoading === 'submit'} disabled={this.isLoading === 'check'}>
+            <Button
+              className="Button Button--primary"
+              type="submit"
+              loading={this.isLoading === 'submit'}
+              disabled={this.isLoading === 'check' || (!this.targetDiscussionId && !this.newDiscussionTitle)}>
               {app.translator.trans('sycho-move-posts.forum.modal.submit')}
             </Button>
-            <Button className="Button" onclick={this.emulate.bind(this)} loading={this.isLoading === 'check'} disabled={this.isLoading === 'submit'}>
+            <Button
+              className="Button"
+              onclick={this.emulate.bind(this)}
+              loading={this.isLoading === 'check'}
+              disabled={this.isLoading === 'submit' || (!this.targetDiscussionId && !this.newDiscussionTitle)}>
               {app.translator.trans('sycho-move-posts.forum.modal.check')}
             </Button>
           </div>

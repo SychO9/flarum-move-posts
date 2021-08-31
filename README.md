@@ -40,7 +40,7 @@ composer require sycho/flarum-move-posts:"*"
 ## Updating
 
 ```sh
-composer update sycho/flarum-move-posts:"*"
+composer update sycho/flarum-move-posts:"*" --with-dependencies
 php flarum migrate
 php flarum cache:clear
 ```

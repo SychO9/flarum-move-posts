@@ -138,7 +138,7 @@ class MovePostsHandler
         }
 
         $targetDiscussion = $newDiscussion
-            ? $this->createTargetDiscussion($sourceDiscussion, $posts->first(), Arr::get($data, 'newDiscussionTitle'))
+            ? $this->createTargetDiscussion($sourceDiscussion, $posts->first(), Arr::get($data, 'newDiscussionTitle'), $emulate)
             : $this->discussions->findOrFail(Arr::get($data, 'targetDiscussionId'));
 
         if (! $newDiscussion && $posts->first()->created_at < $targetDiscussion->firstPost->created_at) {
@@ -213,7 +213,7 @@ class MovePostsHandler
     /**
      * Creates a target discussion when specified.
      */
-    protected function createTargetDiscussion(Discussion $sourceDiscussion, CommentPost $firstPost, string $title): Discussion
+    protected function createTargetDiscussion(Discussion $sourceDiscussion, CommentPost $firstPost, string $title, bool $emulate): Discussion
     {
         $discussion = Discussion::start($title, $firstPost->user);
 
@@ -224,7 +224,9 @@ class MovePostsHandler
             });
         }
 
-        $discussion->save();
+        if (! $emulate) {
+            $discussion->save();
+        }
 
         return $discussion;
     }

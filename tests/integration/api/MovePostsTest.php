@@ -25,9 +25,9 @@ class MovePostsTest extends TestCase
                 ['id' => 2, 'username' => 'Potato', 'email' => 'potato@machine.local', 'is_email_confirmed' => 1],
             ],
             'discussions' => [
-                ['id' => 1, 'title' => __CLASS__, 'created_at' => '2021-08-04 23:01:25', 'last_posted_at' => '2021-08-04 23:01:25', 'user_id' => 1, 'first_post_id' => 1, 'last_post_id' => 15, 'last_post_number' => 7, 'post_number_index' => 7,'comment_count' => 7],
-                ['id' => 2, 'title' => __CLASS__, 'created_at' => '2021-08-01 13:00:00', 'last_posted_at' => '2021-08-05 15:30:00', 'user_id' => 2, 'first_post_id' => 6, 'last_post_id' => 13, 'last_post_number' => 8, 'post_number_index' => 8,'comment_count' => 10],
-                ['id' => 3, 'title' => __CLASS__, 'created_at' => '2021-08-01 13:00:00', 'last_posted_at' => '2021-08-05 22:30:00', 'user_id' => 2, 'first_post_id' => 16, 'last_post_id' => 21, 'last_post_number' => 6, 'post_number_index' => 6,'comment_count' => 10],
+                ['id' => 1, 'title' => __CLASS__, 'created_at' => '2021-08-04 23:01:25', 'last_posted_at' => '2021-08-04 23:01:25', 'user_id' => 1, 'first_post_id' => 1, 'last_post_id' => 15, 'last_post_number' => 7,'comment_count' => 7],
+                ['id' => 2, 'title' => __CLASS__, 'created_at' => '2021-08-01 13:00:00', 'last_posted_at' => '2021-08-05 15:30:00', 'user_id' => 2, 'first_post_id' => 6, 'last_post_id' => 13, 'last_post_number' => 8,'comment_count' => 10],
+                ['id' => 3, 'title' => __CLASS__, 'created_at' => '2021-08-01 13:00:00', 'last_posted_at' => '2021-08-05 22:30:00', 'user_id' => 2, 'first_post_id' => 16, 'last_post_id' => 21, 'last_post_number' => 6,'comment_count' => 10],
             ],
             'posts' => [
                 ['id' => 1, 'created_at' => '2021-08-01 12:00:00', 'number' => 1, 'content' => '<t>potato</t>', 'user_id' => 1, 'discussion_id' => 1, 'type' => 'comment'],
@@ -300,14 +300,21 @@ class MovePostsTest extends TestCase
         );
 
         $posts = CommentPost::query()->find($postIds);
+
+        /** @var Discussion $targetDiscussion */
         $targetDiscussion = Discussion::query()->find($targetDiscussionId);
+        /** @var Discussion $sourceDiscussion */
         $sourceDiscussion = Discussion::query()->find($sourceDiscussionId);
 
+        $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
+        $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
+
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals([8, 9, 10, 11], $posts->pluck('number')->toArray());
-        $this->assertEquals(11, $targetDiscussion->post_number_index);
-        $this->assertEquals(8, $sourceDiscussion->post_number_index);
-        $this->assertEquals(11, $targetDiscussion->last_post_number);
-        $this->assertEquals(4, $sourceDiscussion->last_post_number);
+        $this->assertEquals([2, 3, 4, 5], $posts->pluck('number')->toArray());
+        $this->assertEquals(5, $targetDiscussionMaxNumber);
+        // max number remains the same because of the new event posts
+        $this->assertEquals(5, $sourceDiscussionMaxNumber);
+        $this->assertEquals(5, $targetDiscussion->last_post_number);
+        $this->assertEquals(1, $sourceDiscussion->last_post_number);
     }
 }

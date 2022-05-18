@@ -6,6 +6,8 @@ use Flarum\Discussion\Discussion;
 use Flarum\Post\CommentPost;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\ConnectionResolverInterface;
 
 class MovePostsTest extends TestCase
 {
@@ -76,13 +78,18 @@ class MovePostsTest extends TestCase
         );
 
         $posts = CommentPost::query()->find($postIds);
+        /** @var Discussion $targetDiscussion */
         $targetDiscussion = Discussion::query()->find($targetDiscussionId);
+        /** @var Discussion $sourceDiscussion */
         $sourceDiscussion = Discussion::query()->find($sourceDiscussionId);
+
+        $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
+        $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals([8, 9, 10, 11], $posts->pluck('number')->toArray());
-        $this->assertEquals(11, $targetDiscussion->post_number_index);
-        $this->assertEquals(8, $sourceDiscussion->post_number_index);
+        $this->assertEquals(11, $targetDiscussionMaxNumber);
+        $this->assertEquals(8, $sourceDiscussionMaxNumber);
         $this->assertEquals(11, $targetDiscussion->last_post_number);
         $this->assertEquals(4, $sourceDiscussion->last_post_number);
     }
@@ -108,13 +115,19 @@ class MovePostsTest extends TestCase
         );
 
         $posts = CommentPost::query()->find($postIds);
+
+        /** @var Discussion $targetDiscussion */
         $targetDiscussion = $posts->first()->discussion;;
+        /** @var Discussion $sourceDiscussion */
         $sourceDiscussion = Discussion::query()->find($sourceDiscussionId);
+
+        $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
+        $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals([1, 2, 3, 4], $posts->pluck('number')->toArray());
-        $this->assertEquals(4, $targetDiscussion->post_number_index);
-        $this->assertEquals(8, $sourceDiscussion->post_number_index);
+        $this->assertEquals(4, $targetDiscussionMaxNumber);
+        $this->assertEquals(8, $sourceDiscussionMaxNumber);
         $this->assertEquals(4, $targetDiscussion->last_post_number);
         $this->assertEquals(4, $sourceDiscussion->last_post_number);
         $this->assertEquals(4, $targetDiscussion->comment_count);
@@ -141,14 +154,20 @@ class MovePostsTest extends TestCase
         );
 
         $posts = CommentPost::query()->find($postIds);
+
+        /** @var Discussion $targetDiscussion */
         $targetDiscussion = Discussion::query()->find($targetDiscussionId);
+        /** @var Discussion $sourceDiscussion */
         $sourceDiscussion = Discussion::query()->find($sourceDiscussionId);
+
+        $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
+        $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals([3, 6, 10, 11, 12], $posts->pluck('number')->toArray());
         $this->assertEquals([1, 2, 17, 3, 4, 18, 5, 14, 15, 19, 20, 21], $targetDiscussion->posts->pluck('id')->toArray());
-        $this->assertEquals(12, $targetDiscussion->post_number_index);
-        $this->assertEquals(6, $sourceDiscussion->post_number_index);
+        $this->assertEquals(12, $targetDiscussionMaxNumber);
+        $this->assertEquals(6, $sourceDiscussionMaxNumber);
         $this->assertEquals(12, $targetDiscussion->last_post_number);
         $this->assertEquals(1, $sourceDiscussion->last_post_number);
     }

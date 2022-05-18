@@ -12,7 +12,7 @@ jobs:
     with:
       enable_bundlewatch: false
       enable_prettier: true
-      enable_typescript: true
+      enable_typescript: false
 
       js_package_manager: yarn
       main_git_branch: main

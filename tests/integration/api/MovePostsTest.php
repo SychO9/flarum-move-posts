@@ -200,4 +200,95 @@ class MovePostsTest extends TestCase
         $this->assertEquals(409, $response->getStatusCode());
         $this->assertEquals('move_old_post_to_newer_discussion', json_decode($response->getBody()->getContents(), true)['errors'][0]['code']);
     }
+
+    /*
+     * The tests below create the discussions and posts first through the API before moving.
+     */
+
+    /** @test */
+    public function simple_move_to_existing_discussion_pushes_posts_at_the_end__with_api_created_posts()
+    {
+        // Create source discussion
+        $sourceDiscussionResponse = $this->send(
+            $this->request('POST', '/api/discussions', [
+                'authenticatedAs' => 1,
+                'json' => [
+                    'data' => [
+                        'attributes' => [
+                            'title' => "API Created Source Discussion",
+                            'content' => "ACME1",
+                        ],
+                    ],
+                ],
+            ])
+        );
+
+        // Create Target Discussion
+        $targetDiscussionResponse = $this->send(
+            $this->request('POST', '/api/discussions', [
+                'authenticatedAs' => 2,
+                'json' => [
+                    'data' => [
+                        'attributes' => [
+                            'title' => "API Created Target Discussion",
+                            'content' => "ACME2",
+                        ],
+                    ],
+                ],
+            ])
+        );
+
+        $sourceDiscussionData = json_decode($sourceDiscussionResponse->getBody()->getContents(), true);
+        $targetDiscussionData = json_decode($targetDiscussionResponse->getBody()->getContents(), true);
+
+        $postIds = [];
+
+        $sourceDiscussionId = $sourceDiscussionData['data']['id'];
+        $targetDiscussionId = $targetDiscussionData['data']['id'];
+
+        // Create posts in source discussion
+        for ($i = 0; $i < 4; $i++) {
+            $postResponse = $this->send(
+                $this->request('POST', '/api/posts', [
+                    'authenticatedAs' => 1,
+                    'json' => [
+                        'data' => [
+                            'attributes' => [
+                                'content' => "Auto Source Discussion Reply $i",
+                            ],
+                            'relationships' => [
+                                'discussion' => ['data' => ['id' => $sourceDiscussionId]],
+                            ],
+                        ],
+                    ],
+                ])
+            );
+
+            $postIds[] = json_decode($postResponse->getBody()->getContents(), true)['data']['id'];
+        }
+
+        $response = $this->send(
+            $this->request('POST', '/api/posts/move', [
+                'authenticatedAs' => 1,
+                'json' => [
+                    'data' => [
+                        'postIds' => $postIds,
+                        'sourceDiscussionId' => $sourceDiscussionId,
+                        'targetDiscussionId' => $targetDiscussionId,
+                    ],
+                ],
+            ])
+        );
+
+        $posts = CommentPost::query()->find($postIds);
+        $targetDiscussion = Discussion::query()->find($targetDiscussionId);
+        $sourceDiscussion = Discussion::query()->find($sourceDiscussionId);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals([8, 9, 10, 11], $posts->pluck('number')->toArray());
+        $this->assertEquals(11, $targetDiscussion->post_number_index);
+        $this->assertEquals(8, $sourceDiscussion->post_number_index);
+        $this->assertEquals(11, $targetDiscussion->last_post_number);
+        $this->assertEquals(4, $sourceDiscussion->last_post_number);
+    }
 }

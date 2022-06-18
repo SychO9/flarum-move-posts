@@ -45,11 +45,30 @@
         "flarum-extension": {
             "title": "Move Posts",
             "category": "",
-            "optional-dependencies": ["flarum/tags"],
+            "optional-dependencies": [
+                "flarum/tags"
+            ],
             "icon": {
                 "name": "fas fa-exchange-alt",
                 "backgroundColor": "#117187",
                 "color": "#fff"
+            }
+        },
+        "flarum-cli": {
+            "modules": {
+                "admin": true,
+                "forum": true,
+                "js": true,
+                "jsCommon": false,
+                "css": true,
+                "gitConf": true,
+                "githubActions": true,
+                "prettier": true,
+                "typescript": true,
+                "bundlewatch": false,
+                "backendTesting": true,
+                "editorConfig": true,
+                "styleci": true
             }
         }
     },

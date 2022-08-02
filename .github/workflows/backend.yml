@@ -1,4 +1,4 @@
-name: Move Posts PHP
+name: Backend
 
 on: [workflow_dispatch, push, pull_request]
 

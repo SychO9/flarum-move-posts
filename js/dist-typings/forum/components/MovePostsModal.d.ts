@@ -1,7 +1,17 @@
 /// <reference types="mithril" />
 import Modal from 'flarum/common/components/Modal';
-export default class MovePostsModal extends Modal {
-    oninit(vnode: any): void;
+import { ComponentAttrs } from 'flarum/common/Component';
+import type Discussion from 'flarum/common/models/Discussion';
+export interface MovePostsModalAttrs extends ComponentAttrs {
+    discussion: Discussion;
+    postIds: number[];
+}
+export default class MovePostsModal<T extends MovePostsModalAttrs> extends Modal<T> {
+    isLoading: string | boolean;
+    newDiscussion: boolean;
+    newDiscussionTitle: string;
+    targetDiscussionId: number | null;
+    search: any;
     className(): string;
     title(): any;
     content(): JSX.Element;

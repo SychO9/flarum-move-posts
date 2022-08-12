@@ -22,7 +22,7 @@ class PostMovedPost extends AbstractEventPost implements MergeableInterface
 {
     public static $type = 'postMoved';
 
-    public function saveAfter(Post $previous = null)
+    public function saveAfter(Post $previous = null): self
     {
         $groupSequentialPosts = resolve(SettingsRepositoryInterface::class)->get('sycho-move-posts.group_sequential_event_posts');
 

@@ -62,5 +62,5 @@ return [
         ->type(Notification\PostMovedBlueprint::class, BasicDiscussionSerializer::class, ['alert']),
 
     (new Extend\Event)
-        ->listen(Event\PostsMoved::class, Listener\SendNotificationsWhenPostsAreMoved::class),
+        ->listen(Event\PostsMoved::class, Listener\SendNotificationsWhenPostsAreMoved::class)
 ];

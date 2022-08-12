@@ -22,7 +22,7 @@ class SendNotificationsWhenPostsAreMoved
         $this->notifications = $notifications;
     }
 
-    public function handle(PostsMoved $event)
+    public function handle(PostsMoved $event): void
     {
         $actor = $event->actor;
         $posts = $event->posts

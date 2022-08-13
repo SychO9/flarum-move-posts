@@ -53,12 +53,7 @@ class MovedDiscussionFirstPostFactory
             $content
         );
 
-        $newFirstPost->save();
-
-        // save number again, since it is overwritten by `Post::creating()` hook
-        $newFirstPost->number = $oldFirstPost->number;
-        $newFirstPost->save();
-
+        $newFirstPost->saveQuietly();
         return $newFirstPost;
     }
 }

@@ -53,8 +53,7 @@ class MovedDiscussionFirstPostFactory
             $content
         );
 
-        $newFirstPost->save();
-
+        $newFirstPost->saveQuietly();
         return $newFirstPost;
     }
 }

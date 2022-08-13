@@ -55,6 +55,10 @@ class MovedDiscussionFirstPostFactory
 
         $newFirstPost->save();
 
+        // save number again, since it is overwritten by `crating()` hook
+        $newFirstPost->number = $oldFirstPost->number;
+        $newFirstPost->save();
+
         return $newFirstPost;
     }
 }

@@ -365,20 +365,22 @@ class MovePostsHandler
         $groupSequentialPosts = $this->settings->get('sycho-move-posts.group_sequential_event_posts');
 
         if ($groupSequentialPosts) {
-            foreach($posts as $post) {
-                $nextPost = $posts->firstWhere('number', $post->number+1);
+            $index = -1;
+            $previousPostNumber = -10;
+            $uniqueSortedPosts = $posts->unique('id')->sortBy('number');
 
-                if ($nextPost) {
-                    if (! isset($grouped[$index])) {
-                        $grouped[$index] = new Collection();
-                    }
+            foreach ($uniqueSortedPosts as $post) {
+                $currentPostNumber = $post->number;
+                $isSequential = ($previousPostNumber+1) == $currentPostNumber;
 
+                if ($isSequential) {
                     $grouped[$index]->push($post);
-                    $grouped[$index]->push($nextPost);
-                    $grouped[$index] = $grouped[$index]->unique('id');
                 } else {
                     $index++;
+                    $grouped[$index] = new Collection([$post]);
                 }
+
+                $previousPostNumber = $currentPostNumber;
             }
         } else {
             foreach ($posts as $post) {

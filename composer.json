@@ -1,6 +1,6 @@
 {
-    "name": "pianotell/flarum-move-posts",
-    "description": "Move posts from one discussion to another. Fork from SychO9 with fixes for https://forum.pianotell.com ",
+    "name": "sycho/flarum-move-posts",
+    "description": "Move posts from one discussion to another",
     "keywords": [
         "flarum"
     ],

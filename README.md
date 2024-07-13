@@ -1,8 +1,8 @@
 # Move Posts
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/sycho/flarum-move-posts.svg)](https://packagist.org/packages/sycho/flarum-move-posts) [![Total Downloads](https://img.shields.io/packagist/dt/sycho/flarum-move-posts.svg)](https://packagist.org/packages/sycho/flarum-move-posts)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/pianotell/flarum-move-posts.svg)](https://packagist.org/packages/pianotell/flarum-move-posts) [![Total Downloads](https://img.shields.io/packagist/dt/pianotell/flarum-move-posts.svg)](https://packagist.org/packages/pianotell/flarum-move-posts)
 
-A [Flarum](http://flarum.org) extension. Move posts from one discussion to another.
+A [Flarum](http://flarum.org) extension. Move posts from one discussion to another. Forked from SychO9 to include fixes for [🎹 Piano | Tell](https://forum.pianotell.com).
 
 > **WARNING**: *This extension can in certain scenarios result in breaking old URLs to posts of the discussion you're moving posts to.*
 
@@ -34,13 +34,13 @@ Moved posts are replaced by event posts.
 Install with composer:
 
 ```sh
-composer require sycho/flarum-move-posts:"*"
+composer require pianotell/flarum-move-posts:"*"
 ```
 
 ## Updating
 
 ```sh
-composer update sycho/flarum-move-posts:"*" --with-dependencies
+composer update pianotell/flarum-move-posts:"*" --with-dependencies
 php flarum migrate
 php flarum cache:clear
 ```
@@ -53,6 +53,6 @@ I might publish simple bugfixes or compatibility updates for free.
 
 ## Links
 
-- [Packagist](https://packagist.org/packages/sycho/flarum-move-posts)
-- [GitHub](https://github.com/sycho/flarum-move-posts)
+- [Packagist](https://packagist.org/packages/pianotell/flarum-move-posts)
+- [GitHub](https://github.com/PrimateCoder/flarum-move-posts)
 - [Discuss](https://discuss.flarum.org/d/28824-move-posts)

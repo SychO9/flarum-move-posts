@@ -4,6 +4,8 @@
 
 A [Flarum](http://flarum.org) extension. Move posts from one discussion to another.
 
+This fork includes fixes for [🎹 Piano | Tell](https://forum.pianotell.com).
+
 > **WARNING**: *This extension can in certain scenarios result in breaking old URLs to posts of the discussion you're moving posts to.*
 
 ## Usage

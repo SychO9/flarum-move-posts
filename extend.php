@@ -11,13 +11,8 @@
 
 namespace SychO\MovePosts;
 
-use Flarum\Api\Serializer\BasicDiscussionSerializer;
-use Flarum\Api\Serializer\DiscussionSerializer;
-use Flarum\Api\Serializer\ForumSerializer;
-use Flarum\Discussion\Discussion;
 use Flarum\Extend;
 use Flarum\Api\Context;
-use Flarum\Api\Endpoint;
 use Flarum\Api\Resource;
 use Flarum\Api\Schema;
 

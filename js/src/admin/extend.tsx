@@ -15,12 +15,12 @@ export default [
       label: app.translator.trans('sycho-move-posts.admin.settings.group_sequential_posts'),
       type: 'boolean',
     }))
-    .permission(() => (
-      {
+    .permission(
+      () => ({
         icon: 'fas fa-exchange-alt',
         label: app.translator.trans('sycho-move-posts.admin.permissions.move_posts'),
         permission: 'sycho-move-posts:movePosts',
       }),
       'moderate'
-    )
+    ),
 ];

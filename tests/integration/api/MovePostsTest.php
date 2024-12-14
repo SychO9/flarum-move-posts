@@ -8,6 +8,9 @@ use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\ConnectionResolverInterface;
+use PHPUnit\Framework\Attributes\Test;
+use Flarum\User\User;
+use Flarum\Post\Post;
 
 class MovePostsTest extends TestCase
 {
@@ -20,16 +23,16 @@ class MovePostsTest extends TestCase
         $this->extension('sycho-move-posts');
 
         $this->prepareDatabase([
-            'users' => [
+            User::class => [
                 ['id' => 1, 'username' => 'Muralf', 'email' => 'muralf@machine.local', 'is_email_confirmed' => 1],
                 ['id' => 2, 'username' => 'Potato', 'email' => 'potato@machine.local', 'is_email_confirmed' => 1],
             ],
-            'discussions' => [
+            Discussion::class => [
                 ['id' => 1, 'title' => __CLASS__, 'created_at' => '2021-08-04 23:01:25', 'last_posted_at' => '2021-08-04 23:01:25', 'user_id' => 1, 'first_post_id' => 1, 'last_post_id' => 15, 'last_post_number' => 7,'comment_count' => 7],
                 ['id' => 2, 'title' => __CLASS__, 'created_at' => '2021-08-01 13:00:00', 'last_posted_at' => '2021-08-05 15:30:00', 'user_id' => 2, 'first_post_id' => 6, 'last_post_id' => 13, 'last_post_number' => 8,'comment_count' => 10],
                 ['id' => 3, 'title' => __CLASS__, 'created_at' => '2021-08-01 13:00:00', 'last_posted_at' => '2021-08-05 22:30:00', 'user_id' => 2, 'first_post_id' => 16, 'last_post_id' => 21, 'last_post_number' => 6,'comment_count' => 10],
             ],
-            'posts' => [
+            Post::class => [
                 ['id' => 1, 'created_at' => '2021-08-01 12:00:00', 'number' => 1, 'content' => '<t>potato</t>', 'user_id' => 1, 'discussion_id' => 1, 'type' => 'comment'],
                 ['id' => 2, 'created_at' => '2021-08-01 18:43:00', 'number' => 2, 'content' => '<t>potato</t>', 'user_id' => 1, 'discussion_id' => 1, 'type' => 'comment'],
                 ['id' => 3, 'created_at' => '2021-08-02 08:26:00', 'number' => 3, 'content' => '<t>potato</t>', 'user_id' => 1, 'discussion_id' => 1, 'type' => 'comment'],
@@ -57,7 +60,7 @@ class MovePostsTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function simple_move_to_existing_discussion_pushes_posts_at_the_end()
     {
         $postIds = [10, 11, 12, 13];
@@ -94,7 +97,7 @@ class MovePostsTest extends TestCase
         $this->assertEquals(4, $sourceDiscussion->last_post_number);
     }
 
-    /** @test */
+    #[Test]
     public function simple_move_to_new_discussion_pushes_posts_at_the_end()
     {
         $postIds = [10, 11, 12, 13];
@@ -133,7 +136,7 @@ class MovePostsTest extends TestCase
         $this->assertEquals(4, $targetDiscussion->comment_count);
     }
 
-    /** @test */
+    #[Test]
     public function complex_move_to_existing_discussion_pushes_posts_in_between()
     {
         $postIds = [17, 18, 19, 20, 21];
@@ -172,7 +175,7 @@ class MovePostsTest extends TestCase
         $this->assertEquals(1, $sourceDiscussion->last_post_number);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_move_posts_from_different_discussions()
     {
         $postIds = [7, 8, 9, 20, 21];
@@ -196,7 +199,7 @@ class MovePostsTest extends TestCase
         $this->assertEquals('move_posts_from_different_discussions', json_decode($response->getBody()->getContents(), true)['errors'][0]['code']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_move_older_posts_to_newer_discussions()
     {
         $postIds = [2, 3, 4, 5];
@@ -223,8 +226,7 @@ class MovePostsTest extends TestCase
     /*
      * The tests below create the discussions and posts first through the API before moving.
      */
-
-    /** @test */
+    #[Test]
     public function simple_move_to_existing_discussion_pushes_posts_at_the_end__with_api_created_posts()
     {
         // Create source discussion

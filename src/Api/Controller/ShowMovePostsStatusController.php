@@ -2,28 +2,23 @@
 
 namespace SychO\MovePosts\Api\Controller;
 
-use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Support\Arr;
+use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
-use SychO\MovePosts\Api\Serializer\MovePostsStatusSerializer;
+use Psr\Http\Server\RequestHandlerInterface;
 use SychO\MovePosts\Command\MovePosts;
 
-class ShowMovePostsStatusController extends AbstractShowController
+class ShowMovePostsStatusController implements RequestHandlerInterface
 {
-    /**
-     * @var string
-     */
-    public $serializer = MovePostsStatusSerializer::class;
-
     public function __construct(
         protected Dispatcher $bus
     ) {
     }
 
-    protected function data(ServerRequestInterface $request, Document $document)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actor = RequestUtil::getActor($request);
         $data = Arr::get($request->getParsedBody(), 'data', []);
@@ -32,6 +27,6 @@ class ShowMovePostsStatusController extends AbstractShowController
             new MovePosts($actor, $data, true)
         );
 
-        return ['status' => $status];
+        return new JsonResponse(['status' => $status], 200);
     }
 }

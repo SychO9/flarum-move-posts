@@ -16,6 +16,10 @@ use Flarum\Api\Serializer\DiscussionSerializer;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Extend;
+use Flarum\Api\Context;
+use Flarum\Api\Endpoint;
+use Flarum\Api\Resource;
+use Flarum\Api\Schema;
 
 return [
     (new \SychO\UiKit\Extend\Register),
@@ -30,15 +34,16 @@ return [
 
     new Extend\Locales(__DIR__.'/locale'),
 
-    (new Extend\ApiSerializer(DiscussionSerializer::class))
-        ->attribute('isFirstMoved', function (DiscussionSerializer $serializer, Discussion $discussion) {
-            return (bool) $discussion->is_first_moved;
-        }),
+    (new Extend\ApiResource(Resource\DiscussionResource::class))
+        ->fields(fn () => [
+            Schema\Boolean::make('isFirstMoved'),
+        ]),
 
-    (new Extend\ApiSerializer(ForumSerializer::class))
-        ->attribute('canMovePosts', function (ForumSerializer $serializer) {
-            return $serializer->getActor()->can('movePosts');
-        }),
+    (new Extend\ApiResource(Resource\ForumResource::class))
+        ->fields(fn () => [
+            Schema\Boolean::make('canMovePosts')
+                ->get(fn (object $forum, Context $context) => $context->getActor()->can('movePosts'))
+        ]),
 
     (new Extend\Formatter)
         ->render(Formatter\FormatPostMentions::class)

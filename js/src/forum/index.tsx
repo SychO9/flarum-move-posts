@@ -6,7 +6,7 @@ import Post from 'flarum/forum/components/Post';
 import CommentPost from 'flarum/forum/components/CommentPost';
 import DiscussionPage from 'flarum/forum/components/DiscussionPage';
 import PostControls from 'flarum/forum/utils/PostControls';
-import icon from 'flarum/common/helpers/icon';
+import Icon from 'flarum/common/components/Icon';
 import Discussion from 'flarum/common/models/Discussion';
 import ItemList from 'flarum/common/utils/ItemList';
 import Model from 'flarum/common/Model';
@@ -57,7 +57,7 @@ app.initializers.add('sycho/flarum-move-posts', () => {
       items.add(
         'moving',
         <span className="PostMoving">
-          {icon('fas fa-exchange-alt')} {app.translator.trans('sycho-move-posts.forum.post.moving')}
+          <Icon name="fas fa-exchange-alt" /> {app.translator.trans('sycho-move-posts.forum.post.moving')}
         </span>
       );
     }

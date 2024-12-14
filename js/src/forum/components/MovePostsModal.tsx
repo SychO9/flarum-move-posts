@@ -1,6 +1,6 @@
 import app from 'flarum/forum/app';
 import Button from 'flarum/common/components/Button';
-import Modal from 'flarum/common/components/Modal';
+import FormModal from 'flarum/common/components/FormModal';
 import Switch from 'flarum/common/components/Switch';
 import DiscussionSearch from 'ext:flarum/uikit/forum/DiscussionSearch';
 import { ComponentAttrs } from 'flarum/common/Component';
@@ -12,7 +12,7 @@ export interface MovePostsModalAttrs extends ComponentAttrs {
   postIds: number[];
 }
 
-export default class MovePostsModal<T extends MovePostsModalAttrs> extends Modal<T> {
+export default class MovePostsModal<T extends MovePostsModalAttrs> extends FormModal<T> {
   isLoading: string | boolean = false;
   newDiscussion: boolean = false;
   newDiscussionTitle: string = '';

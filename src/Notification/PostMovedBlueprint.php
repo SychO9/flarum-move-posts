@@ -11,47 +11,29 @@
 
 namespace SychO\MovePosts\Notification;
 
+use Flarum\Notification\AlertableInterface;
 use Flarum\Discussion\Discussion;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 
-class PostMovedBlueprint implements BlueprintInterface
+class PostMovedBlueprint implements BlueprintInterface, AlertableInterface
 {
-    /**
-     * @var Discussion
-     */
-    public $targetDiscussion;
-
-    /**
-     * @var Discussion
-     */
-    public $sourceDiscussion;
-
-    public function __construct(Discussion $targetDiscussion, Discussion $sourceDiscussion)
-    {
-        $this->targetDiscussion = $targetDiscussion;
-        $this->sourceDiscussion = $sourceDiscussion;
+    public function __construct(
+        public Discussion $targetDiscussion,
+        public Discussion $sourceDiscussion
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubject()
+    public function getSubject(): ?\Flarum\Database\AbstractModel
     {
         return $this->sourceDiscussion;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFromUser()
+    public function getFromUser(): ?\Flarum\User\User
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getData()
+    public function getData(): mixed
     {
         return [
             'targetDiscussionTitle' => $this->targetDiscussion->title,
@@ -59,18 +41,12 @@ class PostMovedBlueprint implements BlueprintInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getType()
+    public static function getType(): string
     {
         return 'postMoved';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubjectModel()
+    public static function getSubjectModel(): string
     {
         return Discussion::class;
     }

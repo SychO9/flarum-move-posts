@@ -9,17 +9,9 @@ use SychO\MovePosts\Notification\PostMovedBlueprint;
 
 class SendNotificationsWhenPostsAreMoved
 {
-    /**
-     * @var NotificationSyncer
-     */
-    protected $notifications;
-
-    /**
-     * @param NotificationSyncer $notifications
-     */
-    public function __construct(NotificationSyncer $notifications)
-    {
-        $this->notifications = $notifications;
+    public function __construct(
+        protected NotificationSyncer $notifications
+    ) {
     }
 
     public function handle(PostsMoved $event)

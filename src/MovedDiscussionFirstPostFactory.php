@@ -10,24 +10,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MovedDiscussionFirstPostFactory
 {
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    protected $settings;
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-    /**
-     * @var UrlGenerator
-     */
-    protected $url;
-
-    public function __construct(SettingsRepositoryInterface $settings, TranslatorInterface $translator, UrlGenerator $url)
-    {
-        $this->settings = $settings;
-        $this->translator = $translator;
-        $this->url = $url;
+    public function __construct(
+        protected SettingsRepositoryInterface $settings,
+        protected TranslatorInterface $translator,
+        protected UrlGenerator $url
+    ) {
     }
 
     public function create(Discussion $sourceDiscussion, Discussion $targetDiscussion, CommentPost $oldFirstPost, CommentPost $movedPost): CommentPost

@@ -15,25 +15,10 @@ use Flarum\User\User;
 
 class MovePosts
 {
-    /**
-     * @var \Flarum\User\User
-     */
-    public $actor;
-
-    /**
-     * @var array
-     */
-    public $data;
-
-    /**
-     * @var bool
-     */
-    public $emulate;
-
-    public function __construct(User $actor, array $data, bool $emulate)
-    {
-        $this->actor = $actor;
-        $this->data = $data;
-        $this->emulate = $emulate;
+    public function __construct(
+        public User $actor,
+        public array $data,
+        public bool $emulate
+    ) {
     }
 }

@@ -18,14 +18,9 @@ class ShowMovePostsStatusController extends AbstractShowController
      */
     public $serializer = MovePostsStatusSerializer::class;
 
-    /**
-     * @var Dispatcher
-     */
-    protected $bus;
-
-    public function __construct(Dispatcher $bus)
-    {
-        $this->bus = $bus;
+    public function __construct(
+        protected Dispatcher $bus
+    ) {
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

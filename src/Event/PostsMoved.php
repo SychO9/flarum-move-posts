@@ -9,31 +9,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PostsMoved
 {
-    /**
-     * @var Collection<CommentPost>
-     */
-    public $posts;
-
-    /**
-     * @var Discussion
-     */
-    public $targetDiscussion;
-
-    /**
-     * @var Discussion
-     */
-    public $sourceDiscussion;
-
-    /**
-     * @var User
-     */
-    public $actor;
-
-    public function __construct(Collection $posts, Discussion $targetDiscussion, Discussion $sourceDiscussion, User $actor)
-    {
-        $this->posts = $posts;
-        $this->targetDiscussion = $targetDiscussion;
-        $this->sourceDiscussion = $sourceDiscussion;
-        $this->actor = $actor;
+    public function __construct(
+        public Collection $posts,
+        public Discussion $targetDiscussion,
+        public Discussion $sourceDiscussion,
+        public User $actor
+    ) {
     }
 }

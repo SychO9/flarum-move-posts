@@ -36,51 +36,14 @@ class MovePostsHandler
     const COMPLEX_MOVE = 'complex_move';
     const OLD_TO_NEW_MOVE = 'old_to_new_move';
 
-    /**
-     * @var ConnectionResolverInterface
-     */
-    protected $db;
-
-    /**
-     * @var DiscussionRepository
-     */
-    protected $discussions;
-
-    /**
-     * @var MovePostsValidator
-     */
-    protected $validator;
-
-    /**
-     * @var MovedDiscussionFirstPostFactory
-     */
-    protected $movedDiscussionFirstPostFactory;
-
-    /**
-     * @var Dispatcher
-     */
-    protected $events;
-
-    /**
-     * @var SettingsRepositoryInterface
-     */
-    protected $settings;
-
     public function __construct(
-        ConnectionResolverInterface $db,
-        DiscussionRepository $discussions,
-        MovePostsValidator $validator,
-        MovedDiscussionFirstPostFactory $movedDiscussionFirstPostFactory,
-        Dispatcher $events,
-        SettingsRepositoryInterface $settings
-    )
-    {
-        $this->db = $db;
-        $this->discussions = $discussions;
-        $this->validator = $validator;
-        $this->movedDiscussionFirstPostFactory = $movedDiscussionFirstPostFactory;
-        $this->events = $events;
-        $this->settings = $settings;
+        protected ConnectionResolverInterface $db,
+        protected DiscussionRepository $discussions,
+        protected MovePostsValidator $validator,
+        protected MovedDiscussionFirstPostFactory $movedDiscussionFirstPostFactory,
+        protected Dispatcher $events,
+        protected SettingsRepositoryInterface $settings
+    ) {
     }
 
     /**

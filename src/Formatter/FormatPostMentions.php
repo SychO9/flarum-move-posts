@@ -17,7 +17,7 @@ use s9e\TextFormatter\Utils;
 
 class FormatPostMentions
 {
-    public function __invoke(Renderer $renderer, $context, $xml, Request $request = null)
+    public function __invoke(Renderer $renderer, $context, $xml, ?Request $request = null)
     {
         $post = $context;
 

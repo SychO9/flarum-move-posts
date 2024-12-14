@@ -15,8 +15,12 @@ use s9e\TextFormatter\Utils;
 
 class UnparsePostMentions
 {
-    public function __invoke($context, string $xml)
+    public function __invoke($context, ?string $xml): ?string
     {
+        if (! $xml) {
+            return null;
+        }
+
         $post = $context;
 
         return Utils::replaceAttributes($xml, 'POSTMENTION', function ($attributes) use ($post) {

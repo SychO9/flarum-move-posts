@@ -1,6 +1,6 @@
 {
     "name": "sycho/flarum-move-posts",
-    "description": "Move posts from one discussion to another",
+    "description": "Move posts from one discussion to another. This fork includes fixes for https://forum.pianotell.com/.",
     "keywords": [
         "flarum"
     ],

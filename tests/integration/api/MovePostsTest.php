@@ -87,7 +87,7 @@ class MovePostsTest extends TestCase
         $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
         $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode(), $response->getBody()->getContents());
         $this->assertEquals([8, 9, 10, 11], $posts->pluck('number')->toArray());
         $this->assertEquals(11, $targetDiscussionMaxNumber);
         $this->assertEquals(8, $sourceDiscussionMaxNumber);
@@ -125,7 +125,7 @@ class MovePostsTest extends TestCase
         $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
         $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode(), $response->getBody()->getContents());
         $this->assertEquals([1, 2, 3, 4], $posts->pluck('number')->toArray());
         $this->assertEquals(4, $targetDiscussionMaxNumber);
         $this->assertEquals(8, $sourceDiscussionMaxNumber);
@@ -164,7 +164,9 @@ class MovePostsTest extends TestCase
         $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
         $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $body = $response->getBody()->getContents();
+
+        $this->assertEquals(200, $response->getStatusCode(), $body);
         $this->assertEquals([3, 6, 10, 11, 12], $posts->pluck('number')->toArray());
         $this->assertEquals([1, 2, 17, 3, 4, 18, 5, 14, 15, 19, 20, 21], $targetDiscussion->posts->sortBy('number')->pluck('id')->toArray());
         $this->assertEquals(12, $targetDiscussionMaxNumber);
@@ -193,8 +195,10 @@ class MovePostsTest extends TestCase
             ])
         );
 
-        $this->assertEquals(409, $response->getStatusCode());
-        $this->assertEquals('move_posts_from_different_discussions', json_decode($response->getBody()->getContents(), true)['errors'][0]['code']);
+        $body = $response->getBody()->getContents();
+
+        $this->assertEquals(409, $response->getStatusCode(), $body);
+        $this->assertEquals('move_posts_from_different_discussions', json_decode($body, true)['errors'][0]['code']);
     }
 
     #[Test]
@@ -217,8 +221,10 @@ class MovePostsTest extends TestCase
             ])
         );
 
-        $this->assertEquals(409, $response->getStatusCode());
-        $this->assertEquals('move_old_post_to_newer_discussion', json_decode($response->getBody()->getContents(), true)['errors'][0]['code']);
+        $body = $response->getBody()->getContents();
+
+        $this->assertEquals(409, $response->getStatusCode(), $body);
+        $this->assertEquals('move_old_post_to_newer_discussion', json_decode($body, true)['errors'][0]['code']);
     }
 
     /*
@@ -309,7 +315,7 @@ class MovePostsTest extends TestCase
         $targetDiscussionMaxNumber = $targetDiscussion->posts()->max('number');
         $sourceDiscussionMaxNumber = $sourceDiscussion->posts()->max('number');
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode(), $response->getBody()->getContents());
         $this->assertEquals([2, 3, 4, 5], $posts->pluck('number')->toArray());
         $this->assertEquals(5, $targetDiscussionMaxNumber);
         // max number remains the same because of the new event posts

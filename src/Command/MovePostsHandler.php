@@ -17,10 +17,13 @@ use Flarum\Lock\Event\DiscussionWasLocked;
 use Flarum\Post\CommentPost;
 use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\User\Guest;
 use Flarum\User\User;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use SychO\MovePosts\Event\PostsMoved;
@@ -53,9 +56,8 @@ class MovePostsHandler
      * @throws \Flarum\User\Exception\PermissionDeniedException
      * @throws \Illuminate\Validation\ValidationException
      * @throws MoveOldPostToNewerDiscussionException
-     * @return string|null
      */
-    public function handle(MovePosts $command)
+    public function handle(MovePosts $command): ?string
     {
         try {
             $this->db->connection()->beginTransaction();
@@ -75,7 +77,7 @@ class MovePostsHandler
      * @throws MoveOldPostToNewerDiscussionException
      * @return string|void
      */
-    protected function process(MovePosts $command)
+    protected function process(MovePosts $command): ?string
     {
         $actor = $command->actor;
         $data = $command->data;
@@ -159,9 +161,11 @@ class MovePostsHandler
         if (isset($sourceDiscussion->is_locked) && $movingFirstPostOnly) {
             $sourceDiscussion->is_locked = true;
 
-            $this->events->dispatch(
-                new DiscussionWasLocked($sourceDiscussion, $actor)
-            );
+            if (class_exists(DiscussionWasLocked::class)) {
+                $this->events->dispatch(
+                    new DiscussionWasLocked($sourceDiscussion, $actor)
+                );
+            }
         }
 
         $sourceDiscussion->save();
@@ -169,6 +173,8 @@ class MovePostsHandler
         $this->events->dispatch(
             new PostsMoved($posts, $targetDiscussion, $sourceDiscussion, $actor)
         );
+
+        return null;
     }
 
     /**
@@ -176,7 +182,7 @@ class MovePostsHandler
      */
     protected function createTargetDiscussion(Discussion $sourceDiscussion, CommentPost $firstPost, string $title, bool $emulate): Discussion
     {
-        $discussion = Discussion::start($title, $firstPost->user);
+        $discussion = Discussion::start($title, $firstPost->user ?? new Guest);
 
         // Set the same tags as the old discussion
         if ($sourceDiscussion->tags && $sourceDiscussion->tags->isNotEmpty()) {
@@ -231,7 +237,7 @@ class MovePostsHandler
         $numberDifference = $discussion->posts()->max('number') - $posts->first()->number + 1;
         $posts->toQuery()->update([
             'discussion_id' => $discussion->id,
-            'number' => $this->db->raw("number + $numberDifference"),
+            'number' => $this->db->connection()->raw("number + $numberDifference"),
         ]);
 
         $discussion->refreshCommentCount();
@@ -249,6 +255,7 @@ class MovePostsHandler
      */
     protected function complexMove(EloquentCollection $posts, Discussion $discussion): EloquentCollection
     {
+        /** @var Connection $db */
         $db = $this->db->connection();
 
         // Create number gaps in discussion
@@ -263,11 +270,11 @@ class MovePostsHandler
             ->from($db->raw("({$selectCreatedAt->toSql()}) as sp"))
             ->whereColumn('posts.created_at', '>=', $db->raw('sp.created_at'));
 
-        $db->table('posts')
-            ->mergeBindings($selectCount)
-            ->where('discussion_id', $discussion->id)
-            ->orderBy('number', 'desc')
-            ->update(['number' => $db->raw("number + ({$selectCount->toSql()})")]);
+        // Create number gaps in discussion.
+        match ($db->getDriverName()) {
+            'sqlite', 'pgsql' => $this->createNumberGapsOneByOne($discussion, $selectCount),
+            default => $this->createNumberGaps($discussion, $selectCount),
+        };
 
         // To fill the gaps with the new posts,
         // we query the posts that will be ordered right before the new ones,
@@ -350,5 +357,45 @@ class MovePostsHandler
         }
 
         return new Collection($grouped);
+    }
+
+    private function createNumberGaps(Discussion $discussion, QueryBuilder $selectCount): void
+    {
+        /** @var Connection $db */
+        $db = $this->db->connection();
+
+        $updateFrom = $db->query()
+            ->select('rr.id')
+            ->from('posts', 'rr')
+            ->where('rr.discussion_id', $discussion->id)
+            ->orderBy('rr.number', 'desc');
+
+        $db->table('posts')
+            ->mergeBindings($selectCount)
+            ->whereIn('id', function (QueryBuilder $query) use ($updateFrom) {
+                $query->select('r.id')->fromSub($updateFrom, 'r');
+            })
+            ->update(['number' => $db->raw("number + ({$selectCount->toSql()})")]);
+    }
+
+    /**
+     * SQLite/PgSQL doesn't support update order by.
+     * So it'll have to be slower...
+     */
+    private function createNumberGapsOneByOne(Discussion $discussion, QueryBuilder $selectCount): void
+    {
+        /** @var Connection $db */
+        $db = $this->db->connection();
+
+        $db->table('posts')
+            ->select('id', 'number')
+            ->selectSub($selectCount, 'count')
+            ->where('discussion_id', $discussion->id)
+            ->orderBy('number', 'desc')
+            ->each(function ($post) use ($db) {
+                $db->table('posts')
+                    ->where('id', $post->id)
+                    ->update(['number' => $db->raw("number + $post->count")]);
+            });
     }
 }

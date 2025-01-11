@@ -6,8 +6,6 @@ use Flarum\Discussion\Discussion;
 use Flarum\Post\CommentPost;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\ConnectionResolverInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Flarum\User\User;
 use Flarum\Post\Post;
@@ -168,7 +166,7 @@ class MovePostsTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals([3, 6, 10, 11, 12], $posts->pluck('number')->toArray());
-        $this->assertEquals([1, 2, 17, 3, 4, 18, 5, 14, 15, 19, 20, 21], $targetDiscussion->posts->pluck('id')->toArray());
+        $this->assertEquals([1, 2, 17, 3, 4, 18, 5, 14, 15, 19, 20, 21], $targetDiscussion->posts->sortBy('number')->pluck('id')->toArray());
         $this->assertEquals(12, $targetDiscussionMaxNumber);
         $this->assertEquals(6, $sourceDiscussionMaxNumber);
         $this->assertEquals(12, $targetDiscussion->last_post_number);

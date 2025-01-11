@@ -9,7 +9,7 @@ export default [
       help: app.translator.trans('sycho-move-posts.admin.settings.moved_first_post_content_help', {}, true),
       default: app.translator.trans('sycho-move-posts.lib.discussion.first_post.default_content', {}, true),
       type: 'textarea',
-      rows: 6
+      rows: 6,
     }))
     .setting(() => ({
       setting: 'sycho-move-posts.group_sequential_event_posts',

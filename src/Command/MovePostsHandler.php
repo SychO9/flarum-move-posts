@@ -83,7 +83,7 @@ class MovePostsHandler
 
         $actor->assertCan('movePosts');
 
-        $this->validator->assertValid($data);
+        $this->validator->validateMissingKeys()->assertValid($data);
 
         $newDiscussion = Arr::get($data, 'newDiscussion', false);
 

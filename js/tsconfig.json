@@ -12,8 +12,8 @@
       "flarum/*": [
         "../vendor/flarum/core/js/dist-typings/*"
       ],
-      "ext:flarum/uikit": [
-        "../vendor/flarum/uikit/js/dist-typings/*"
+      "ext:sycho/flarum-uikit": [
+        "../vendor/sycho/flarum-uikit/js/dist-typings/*"
       ]
     }
   }

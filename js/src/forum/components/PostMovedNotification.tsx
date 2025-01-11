@@ -1,5 +1,4 @@
 import Notification from 'flarum/forum/components/Notification';
-import { truncate } from 'flarum/common/utils/string';
 
 export default class PostMovedNotification extends Notification {
   icon() {

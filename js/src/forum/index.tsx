@@ -82,7 +82,7 @@ app.initializers.add('sycho/flarum-move-posts', () => {
           }
         >
           {app.translator.trans('sycho-move-posts.forum.discussion.move_posts')}
-          <span className="MovePosts-Button-count">{state.selectedPostsToMove().length}</span>
+          <span className="Bubble MovePosts-Button-count">{state.selectedPostsToMove().length}</span>
         </Button>
       );
     }

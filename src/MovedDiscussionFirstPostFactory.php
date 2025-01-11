@@ -41,6 +41,7 @@ class MovedDiscussionFirstPostFactory
         );
 
         $newFirstPost->saveQuietly();
+
         return $newFirstPost;
     }
 }

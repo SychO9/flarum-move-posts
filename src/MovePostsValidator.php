@@ -15,7 +15,7 @@ use Flarum\Foundation\AbstractValidator;
 
 class MovePostsValidator extends AbstractValidator
 {
-    protected $rules = [
+    protected array $rules = [
         'sourceDiscussionId' => 'required|integer',
         'postIds' => 'required|array',
         'postIds.*' => 'required|integer',

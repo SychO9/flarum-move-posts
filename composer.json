@@ -19,10 +19,10 @@
     },
     "require": {
         "flarum/core": "^2.0.0",
-        "sycho/flarum-uikit": "^0.2.0"
+        "sycho/flarum-uikit": "^0.3.0"
     },
     "require-dev": {
-        "flarum/testing": "*"
+        "flarum/testing": "^2.0.0-beta.1"
     },
     "authors": [
         {

@@ -2,7 +2,7 @@ import app from 'flarum/forum/app';
 import Button from 'flarum/common/components/Button';
 import FormModal from 'flarum/common/components/FormModal';
 import Switch from 'flarum/common/components/Switch';
-import DiscussionSearch from 'ext:flarum/uikit/forum/DiscussionSearch';
+import DiscussionSearch from 'ext:sycho/flarum-uikit/forum/components/DiscussionSearch';
 import { ComponentAttrs } from 'flarum/common/Component';
 import type Discussion from 'flarum/common/models/Discussion';
 import GlobalSearchState from 'flarum/forum/states/GlobalSearchState';
@@ -49,13 +49,6 @@ export default class MovePostsModal<T extends MovePostsModalAttrs> extends FormM
           ) : (
             <div className="Form-group">
               <label for="destination">{app.translator.trans('sycho-move-posts.forum.modal.destination')}</label>
-              {/*<input
-                id="destination"
-                className="FormControl"
-                type="number"
-                required={true}
-                onchange={(e: any) => (this.targetDiscussionId = e.target!.value)}
-              />*/}
               <DiscussionSearch
                 state={this.search}
                 ignore={this.attrs.discussion.id()}
@@ -104,7 +97,7 @@ export default class MovePostsModal<T extends MovePostsModalAttrs> extends FormM
 
   emulate() {
     this.onsubmit(null, true).then((response: any) => {
-      switch (response.data.attributes.status) {
+      switch (response.status) {
         case 'old_to_new_move':
           this.alertAttrs = { type: 'error', content: app.translator.trans('sycho-move-posts.forum.modal.status.old_to_new_move') };
           break;
